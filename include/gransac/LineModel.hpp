@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AbstractModel.hpp"
+#include "gransac/AbstractModel.hpp"
 
 typedef std::array<GRANSAC::VPFloat, 2> Vector2VP;
 

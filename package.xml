@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<package>
+  <name>gransac</name>
+  <version>1.0.0</version>
+  <description>Multi-threaded generic RANSAC implemetation</description>
+  <maintainer email="srinaths@umich.edu">Srinath Sridhar</maintainer>
+  <license>MIT</license>
+  <url>https://github.com/drsrinathsridhar/GRANSAC</url>
+  <buildtool_depend>catkin</buildtool_depend>
+</package>

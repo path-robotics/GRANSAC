@@ -9,7 +9,7 @@
 #include <vector>
 #include <omp.h>
 
-#include "AbstractModel.hpp"
+#include "gransac/AbstractModel.hpp"
 
 namespace GRANSAC
 {

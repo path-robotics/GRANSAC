@@ -1,6 +1,12 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 
-PROJECT(LineFittingSample)
+PROJECT(gransac)
+
+## Compile as C++11, supported in ROS Kinetic and newer
+add_compile_options(-std=c++11)
+
+## Find catkin macros and libraries
+find_package(catkin)
 
 IF(MSVC)
   ADD_DEFINITIONS(-DNOMINMAX)
@@ -24,10 +30,21 @@ IF(OPENMP_FOUND)
   MESSAGE(STATUS "Found OpenMP")
 ENDIF()
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/../include ${OpenCV_INCLUDE_DIRS})
+catkin_package(
+  INCLUDE_DIRS include ${OpenCV_INCLUDE_DIRS}
+  LIBRARIES line_fit
+#  CATKIN_DEPENDS
+#  DEPENDS
+)
 
-SET(CPP_FILES LineFittingSample.cpp)
-SET(VC_LIBS ${OpenCV_LIBS})
-	
-ADD_EXECUTABLE(${PROJECT_NAME} ${CPP_FILES} ${HPP_FILES})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${VC_LIBS})
+INCLUDE_DIRECTORIES(
+  include
+  ${OpenCV_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+)
+
+ADD_LIBRARY(line_fit src/line_fit.cpp ${HPP_FILES})
+TARGET_LINK_LIBRARIES(line_fit ${OpenCV_LIBS})
+
+ADD_EXECUTABLE(LineFittingSample test/LineFittingSample.cpp src/line_fit.cpp ${HPP_FILES})
+TARGET_LINK_LIBRARIES(LineFittingSample ${OpenCV_LIBS})
