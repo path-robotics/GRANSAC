@@ -31,13 +31,12 @@ void LineFit::clear_data_points() {
 void LineFit::get_best_inliers(cv::Mat2f& best_inliers) {
   auto r_best_inliers = m_estimator.GetBestInliers();
   int N = r_best_inliers.size();
-  cv::Size mat_size(1,N);
-  best_inliers = cv::Mat2f(mat_size);
+  best_inliers = cv::Mat2f(1,N);
   if (r_best_inliers.size() > 0) {
     int i = 0;
     for (auto& inlier : r_best_inliers) {
       auto r_pt = std::dynamic_pointer_cast<Point2D>(inlier);
-      cv::Vec2f pt(floor(r_pt->m_Point2D[0]), floor(r_pt->m_Point2D[1]));
+      cv::Vec2f pt(r_pt->m_Point2D[0], r_pt->m_Point2D[1]);
       best_inliers.at<cv::Vec2f>(0,i) = pt;
       i++;
     }
