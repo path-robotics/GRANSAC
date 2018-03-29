@@ -54,6 +54,9 @@ int main(int argc, char * argv[])
     lf.draw_best_inliers(Canvas);
     lf.draw_best_model(Canvas);
 
+    cv::Mat2f inliers = cv_CandPoints.clone();
+    lf.get_best_inliers(inliers);
+
 	while (true)
 	{
 		cv::imshow("RANSAC Example", Canvas);
