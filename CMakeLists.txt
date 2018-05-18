@@ -32,7 +32,7 @@ ENDIF()
 
 catkin_package(
   INCLUDE_DIRS include ${OpenCV_INCLUDE_DIRS}
-  LIBRARIES line_fit
+  LIBRARIES line_fit plane_fit
 #  CATKIN_DEPENDS
 #  DEPENDS
 )
@@ -45,6 +45,9 @@ INCLUDE_DIRECTORIES(
 
 ADD_LIBRARY(line_fit src/line_fit.cpp ${HPP_FILES})
 TARGET_LINK_LIBRARIES(line_fit ${OpenCV_LIBS})
+
+ADD_LIBRARY(plane_fit src/plane_fit.cpp ${HPP_FILES})
+TARGET_LINK_LIBRARIES(plane_fit)
 
 ADD_EXECUTABLE(LineFittingSample test/LineFittingSample.cpp src/line_fit.cpp ${HPP_FILES})
 TARGET_LINK_LIBRARIES(LineFittingSample ${OpenCV_LIBS})
