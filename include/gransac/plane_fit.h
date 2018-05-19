@@ -11,12 +11,12 @@ class PlaneFit {
 
  public:
   PlaneFit();
-  PlaneFit(const cv::Mat3f& data_points);
+  PlaneFit(const cv::Mat3d& data_points);
   ~PlaneFit();
 
-  void load_data_points(const cv::Mat3f& data_points);
+  void load_data_points(const cv::Mat3d& data_points);
   void clear_data_points();
-  void get_best_inliers(cv::Mat3f& best_inliers);
-  bool get_best_model(cv::Mat3f& best_model);
+  void get_best_inliers(cv::Mat3d& best_inliers);
+  bool get_best_model(cv::Mat3d& best_model);
   bool estimate(GRANSAC::VPFloat threshold, int max_iterations = 1000);
 };
