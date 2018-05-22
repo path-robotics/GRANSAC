@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ostream>
+#include <vector>
 #include "gransac/AbstractModel.hpp"
 
 typedef std::array<GRANSAC::VPFloat, 3> Vector3VP;
@@ -8,14 +10,34 @@ class Point3D
     : public GRANSAC::AbstractParameter
 {
 public:
-  Point3D(GRANSAC::VPFloat x, GRANSAC::VPFloat y, GRANSAC::VPFloat z)
+    Point3D(GRANSAC::VPFloat x, GRANSAC::VPFloat y, GRANSAC::VPFloat z)
     {
-	m_Point3D[0] = x;
-	m_Point3D[1] = y;
-	m_Point3D[2] = z;
+        m_Point3D[0] = x;
+        m_Point3D[1] = y;
+        m_Point3D[2] = z;
     };
 
+    inline bool operator==( const Point3D& other) const
+    {
+        return (this->m_Point3D[0] == other.m_Point3D[0] and
+                this->m_Point3D[1] == other.m_Point3D[1] and
+                this->m_Point3D[2] == other.m_Point3D[2]);
+    }
+
+    inline bool operator!=( const Point3D& other) const
+    {
+        return !(*this == other);
+    }
+
     Vector3VP m_Point3D;
+};
+
+inline std::ostream& operator<<(std::ostream& os, const Point3D& pt)
+{
+    os << "[" << pt.m_Point3D[0]
+       << ", " << pt.m_Point3D[1]
+       << ", " << pt.m_Point3D[2] << "];";
+    return os;
 };
 
 
@@ -52,41 +74,98 @@ struct PlaneParams {
     GRANSAC::VPFloat b;
     GRANSAC::VPFloat c;
     GRANSAC::VPFloat d;
+
+    PlaneParams() { };
+
+    PlaneParams(GRANSAC::VPFloat _a, GRANSAC::VPFloat _b,
+                GRANSAC::VPFloat _c, GRANSAC::VPFloat _d)
+    {
+        a = _a;
+        b = _b;
+        c = _c;
+        d = _d;
+    };
+
+    inline bool operator==( const PlaneParams& other) const
+    {
+        // Plane is equal if params of one are a multiple of the other
+        std::vector<double> multiplier;
+        multiplier.push_back(this->a / other.a);
+        multiplier.push_back(this->b / other.b);
+        multiplier.push_back(this->c / other.c);
+        multiplier.push_back(this->d / other.d);
+
+        std::vector<bool> is_zero;
+        is_zero.push_back(this->a == 0 and other.a == 0);
+        is_zero.push_back(this->b == 0 and other.b == 0);
+        is_zero.push_back(this->c == 0 and other.c == 0);
+        is_zero.push_back(this->d == 0 and other.d == 0);
+
+        std::vector<double> non_zero_multipliers;
+        for (int i = 0; i < 4; ++i)
+        {
+            if (!is_zero[i])
+            {
+                non_zero_multipliers.push_back(multiplier[i]);
+            }
+        }
+
+        if ( std::adjacent_find(non_zero_multipliers.begin(), non_zero_multipliers.end(), std::not_equal_to<double>() ) == non_zero_multipliers.end() )
+        {
+            return true;
+        }
+        {
+            return false;
+        }
+    };
+
+    inline bool operator!=( const PlaneParams& other) const
+    {
+        return !(*this == other);
+    };
 };
+
+inline std::ostream& operator<<(std::ostream& os, const PlaneParams& param)
+{
+    os << "a: " << param.a << ", b: " << param.b
+       << ", c: " << param.c << ", d: " << param.d;
+    return os;
+};
+
 
 inline PlaneParams ConstructFromPointNormal(const Point3D& Pt, const Point3D& Normal)
 {
-  PlaneParams Result;
-  Point3D NormalizedNormal = Normalize(Normal);
-  Result.a = NormalizedNormal.m_Point3D[0];
-  Result.b = NormalizedNormal.m_Point3D[1];
-  Result.c = NormalizedNormal.m_Point3D[2];
-  Result.d = -Dot(Pt, NormalizedNormal);
-  return Result;
+    PlaneParams Result;
+    Point3D NormalizedNormal = Normalize(Normal);
+    Result.a = NormalizedNormal.m_Point3D[0];
+    Result.b = NormalizedNormal.m_Point3D[1];
+    Result.c = NormalizedNormal.m_Point3D[2];
+    Result.d = -Dot(Pt, NormalizedNormal);
+    return Result;
 };
 
 inline Point3D Subtract(const Point3D& Left, const Point3D& Right)
 {
-  Point3D Result(0, 0, 0);
-  Result.m_Point3D[0] = Left.m_Point3D[0] - Right.m_Point3D[0];
-  Result.m_Point3D[1] = Left.m_Point3D[1] - Right.m_Point3D[1];
-  Result.m_Point3D[2] = Left.m_Point3D[2] - Right.m_Point3D[2];
-  return Result;
+    Point3D Result(0, 0, 0);
+    Result.m_Point3D[0] = Left.m_Point3D[0] - Right.m_Point3D[0];
+    Result.m_Point3D[1] = Left.m_Point3D[1] - Right.m_Point3D[1];
+    Result.m_Point3D[2] = Left.m_Point3D[2] - Right.m_Point3D[2];
+    return Result;
 };
 
 inline Point3D Add(const Point3D& Left, const Point3D& Right)
 {
-  Point3D Result(0, 0, 0);
-  Result.m_Point3D[0] = Left.m_Point3D[0] + Right.m_Point3D[0];
-  Result.m_Point3D[1] = Left.m_Point3D[1] + Right.m_Point3D[1];
-  Result.m_Point3D[2] = Left.m_Point3D[2] + Right.m_Point3D[2];
-  return Result;
+    Point3D Result(0, 0, 0);
+    Result.m_Point3D[0] = Left.m_Point3D[0] + Right.m_Point3D[0];
+    Result.m_Point3D[1] = Left.m_Point3D[1] + Right.m_Point3D[1];
+    Result.m_Point3D[2] = Left.m_Point3D[2] + Right.m_Point3D[2];
+    return Result;
 };
 
 inline PlaneParams ConstructFromPoints(const Point3D& V0, const Point3D& V1, const Point3D& V2)
 {
-  Point3D Normal = Normalize(Cross(Subtract(V1, V0), Subtract(V2, V0)));
-  return ConstructFromPointNormal(V0, Normal);
+    Point3D Normal = Normalize(Cross(Subtract(V1, V0), Subtract(V2, V0)));
+    return ConstructFromPointNormal(V0, Normal);
 };
 
 class Plane3DModel
@@ -103,6 +182,7 @@ protected:
     GRANSAC::VPFloat m_n_z;
     GRANSAC::VPFloat m_p;
 
+public:
     virtual GRANSAC::VPFloat ComputeDistanceMeasure(std::shared_ptr<GRANSAC::AbstractParameter> Param) override
     {
 	auto ExtPoint3D = std::dynamic_pointer_cast<Point3D>(Param);
@@ -170,5 +250,10 @@ public:
 	GRANSAC::VPFloat InlierFraction = GRANSAC::VPFloat(nInliers) / GRANSAC::VPFloat(nTotalParams); // This is the inlier fraction
 
 	return std::make_pair(InlierFraction, Inliers);
+    };
+
+    virtual PlaneParams GetPlaneParams()
+    {
+    return PlaneParams(m_a, m_b, m_c, m_d);
     };
 };
