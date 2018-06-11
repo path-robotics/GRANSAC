@@ -46,3 +46,15 @@ GRANSAC is released under an [MIT License](https://opensource.org/licenses/MIT).
 
 Srinath Sridhar (srinaths@umich.edu)
 Max Planck Institute for Informatics
+
+## Note on building with GTest on Ubuntu
+
+Installing libgtest-dev only installs the source files. You must build the libraries manually and copy (or symlink) them to an appropriate directory.
+
+```
+sudo apt install libgtest-dev
+cd /usr/src/gtest
+sudo cmake CMakeLists.txt
+sudo make
+sudo cp *.a /usr/lib
+```
