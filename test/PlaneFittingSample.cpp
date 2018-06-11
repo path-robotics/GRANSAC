@@ -42,7 +42,7 @@ int main(int argc, char * argv[])
     std::mt19937 RNG(SeedDevice());
 
     std::uniform_real_distribution<> UniDist(-Side, Side); // [Incl, Incl]
-    double Perturb = 25;
+    double Perturb = 200;
 	std::normal_distribution<GRANSAC::VPFloat> PerturbDist(0, Perturb);
 
     cv::Mat3d cv_CandPoints(1, nPoints);
@@ -62,7 +62,7 @@ int main(int argc, char * argv[])
 
     // Fit the line and find the inliers
     PlaneFit pf(cv_CandPoints);
-    pf.estimate(5,1000);
+    pf.estimate(100,1000);
 
     cv::Mat3d inliers = cv_CandPoints.clone();
     pf.get_best_inliers(inliers);
