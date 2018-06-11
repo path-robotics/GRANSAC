@@ -191,7 +191,7 @@ public:
 
 	// Return distance between passed "point" and this plane
 	// http://mathworld.wolfram.com/Plane.html
-    GRANSAC::VPFloat Dist = m_n_x * ExtPoint3D->m_Point3D[0] + m_n_y * ExtPoint3D->m_Point3D[1] + m_n_z * ExtPoint3D->m_Point3D[2] + m_p;
+    GRANSAC::VPFloat Dist = fabs(m_n_x * ExtPoint3D->m_Point3D[0] + m_n_y * ExtPoint3D->m_Point3D[1] + m_n_z * ExtPoint3D->m_Point3D[2] + m_p);
 
 	return Dist;
     };
