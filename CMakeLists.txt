@@ -21,6 +21,7 @@ ELSE()
 ENDIF()
 
 FIND_PACKAGE(OpenCV REQUIRED)
+FIND_PACKAGE(GTest REQUIRED)
 
 # OpenMP
 FIND_PACKAGE(OpenMP)
@@ -32,7 +33,7 @@ ENDIF()
 
 catkin_package(
   INCLUDE_DIRS include ${OpenCV_INCLUDE_DIRS}
-  LIBRARIES line_fit
+  LIBRARIES line_fit plane_fit
 #  CATKIN_DEPENDS
 #  DEPENDS
 )
@@ -41,10 +42,20 @@ INCLUDE_DIRECTORIES(
   include
   ${OpenCV_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
+  ${GTEST_INCLUDE_DIRS}
 )
 
 ADD_LIBRARY(line_fit src/line_fit.cpp ${HPP_FILES})
 TARGET_LINK_LIBRARIES(line_fit ${OpenCV_LIBS})
 
+ADD_LIBRARY(plane_fit src/plane_fit.cpp ${HPP_FILES})
+TARGET_LINK_LIBRARIES(plane_fit)
+
 ADD_EXECUTABLE(LineFittingSample test/LineFittingSample.cpp src/line_fit.cpp ${HPP_FILES})
 TARGET_LINK_LIBRARIES(LineFittingSample ${OpenCV_LIBS})
+
+ADD_EXECUTABLE(PlaneFittingSample test/PlaneFittingSample.cpp src/plane_fit.cpp ${HPP_FILES})
+TARGET_LINK_LIBRARIES(PlaneFittingSample ${OpenCV_LIBS})
+
+CATKIN_ADD_GTEST(test_PlaneModel test/test_PlaneModel.cpp ${HPP_FILES})
+TARGET_LINK_LIBRARIES(test_PlaneModel ${OpenCV_LIBS} ${GTEST_LIBRARIES})
