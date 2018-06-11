@@ -256,7 +256,7 @@ TEST(Plane3DModelInitializeTest, UnitPlanes) {
   ASSERT_EQ(y_z_plane, y_z_plane_3.GetPlaneParams());
 }
 
-TEST(ComputeDistanceMeasureTest, UnitPlanes) {
+TEST(ComputeDistanceMeasureTest, OnPlane) {
   Point3D origin(0, 0, 0);
   Point3D x_hat(1, 0, 0);
   Point3D y_hat(0, 1, 0);
@@ -269,8 +269,6 @@ TEST(ComputeDistanceMeasureTest, UnitPlanes) {
   PlaneParams x_z_plane(0, 1, 0, 0);
   PlaneParams y_z_plane(1, 0, 0, 0);
 
-  std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > data_points;
-
   std::shared_ptr<GRANSAC::AbstractParameter> origin_ap = std::make_shared<Point3D>(origin.m_Point3D[0], origin.m_Point3D[1], origin.m_Point3D[2]);
   std::shared_ptr<GRANSAC::AbstractParameter> x_hat_ap = std::make_shared<Point3D>(x_hat.m_Point3D[0], x_hat.m_Point3D[1], x_hat.m_Point3D[2]);
   std::shared_ptr<GRANSAC::AbstractParameter> y_hat_ap = std::make_shared<Point3D>(y_hat.m_Point3D[0], y_hat.m_Point3D[1], y_hat.m_Point3D[2]);
@@ -282,55 +280,118 @@ TEST(ComputeDistanceMeasureTest, UnitPlanes) {
   // x-y plane
   std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > x_y_plane_points_0 = {origin_ap, x_hat_ap, y_hat_ap};
   Plane3DModel x_y_plane_0(x_y_plane_points_0);
-  ASSERT_EQ(1.0, x_y_plane_0.ComputeDistanceMeasure(z_hat_ap));
+  ASSERT_EQ(0.0, x_y_plane_0.ComputeDistanceMeasure(origin_ap));
+  ASSERT_EQ(0.0, x_y_plane_0.ComputeDistanceMeasure(x_hat_ap));
+  ASSERT_EQ(0.0, x_y_plane_0.ComputeDistanceMeasure(y_hat_ap));
 
   std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > x_y_plane_points_1 = {origin_ap, neg_x_hat_ap, neg_y_hat_ap};
   Plane3DModel x_y_plane_1(x_y_plane_points_1);
-  ASSERT_EQ(-1.0, x_y_plane_1.ComputeDistanceMeasure(neg_z_hat_ap));
+  ASSERT_EQ(0.0, x_y_plane_1.ComputeDistanceMeasure(origin_ap));
+  ASSERT_EQ(0.0, x_y_plane_1.ComputeDistanceMeasure(neg_x_hat_ap));
+  ASSERT_EQ(0.0, x_y_plane_1.ComputeDistanceMeasure(neg_y_hat_ap));
 
   std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > x_y_plane_points_2 = {origin_ap, neg_x_hat_ap, y_hat_ap};
   Plane3DModel x_y_plane_2(x_y_plane_points_2);
-  ASSERT_EQ(-1.0, x_y_plane_2.ComputeDistanceMeasure(z_hat_ap));
+  ASSERT_EQ(0.0, x_y_plane_2.ComputeDistanceMeasure(origin_ap));
+  ASSERT_EQ(0.0, x_y_plane_2.ComputeDistanceMeasure(neg_x_hat_ap));
+  ASSERT_EQ(0.0, x_y_plane_2.ComputeDistanceMeasure(y_hat_ap));
 
   std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > x_y_plane_points_3 = {origin_ap, x_hat_ap, neg_y_hat_ap};
   Plane3DModel x_y_plane_3(x_y_plane_points_3);
-  ASSERT_EQ(1.0, x_y_plane_3.ComputeDistanceMeasure(neg_z_hat_ap));
+  ASSERT_EQ(0.0, x_y_plane_3.ComputeDistanceMeasure(origin_ap));
+  ASSERT_EQ(0.0, x_y_plane_3.ComputeDistanceMeasure(x_hat_ap));
+  ASSERT_EQ(0.0, x_y_plane_3.ComputeDistanceMeasure(neg_y_hat_ap));
 
   // x-z plane
   std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > x_z_plane_points_0 = {origin_ap, x_hat_ap, z_hat_ap};
   Plane3DModel x_z_plane_0(x_z_plane_points_0);
-  ASSERT_EQ(x_z_plane, x_z_plane_0.GetPlaneParams());
+  ASSERT_EQ(0.0, x_z_plane_0.ComputeDistanceMeasure(origin_ap));
+  ASSERT_EQ(0.0, x_z_plane_0.ComputeDistanceMeasure(x_hat_ap));
+  ASSERT_EQ(0.0, x_z_plane_0.ComputeDistanceMeasure(z_hat_ap));
 
   std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > x_z_plane_points_1 = {origin_ap, neg_x_hat_ap, neg_z_hat_ap};
   Plane3DModel x_z_plane_1(x_z_plane_points_1);
-  ASSERT_EQ(x_z_plane, x_z_plane_1.GetPlaneParams());
+  ASSERT_EQ(0.0, x_z_plane_1.ComputeDistanceMeasure(origin_ap));
+  ASSERT_EQ(0.0, x_z_plane_1.ComputeDistanceMeasure(neg_x_hat_ap));
+  ASSERT_EQ(0.0, x_z_plane_1.ComputeDistanceMeasure(neg_z_hat_ap));
 
   std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > x_z_plane_points_2 = {origin_ap, neg_x_hat_ap, z_hat_ap};
   Plane3DModel x_z_plane_2(x_z_plane_points_2);
-  ASSERT_EQ(x_z_plane, x_z_plane_2.GetPlaneParams());
+  ASSERT_EQ(0.0, x_z_plane_2.ComputeDistanceMeasure(origin_ap));
+  ASSERT_EQ(0.0, x_z_plane_2.ComputeDistanceMeasure(neg_x_hat_ap));
+  ASSERT_EQ(0.0, x_z_plane_2.ComputeDistanceMeasure(z_hat_ap));
 
   std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > x_z_plane_points_3 = {origin_ap, x_hat_ap, neg_z_hat_ap};
   Plane3DModel x_z_plane_3(x_z_plane_points_3);
-  ASSERT_EQ(x_z_plane, x_z_plane_3.GetPlaneParams());
+  ASSERT_EQ(0.0, x_z_plane_3.ComputeDistanceMeasure(origin_ap));
+  ASSERT_EQ(0.0, x_z_plane_3.ComputeDistanceMeasure(x_hat_ap));
+  ASSERT_EQ(0.0, x_z_plane_3.ComputeDistanceMeasure(neg_z_hat_ap));
 
   // y-z plane
   std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > y_z_plane_points_0 = {origin_ap, y_hat_ap, z_hat_ap};
   Plane3DModel y_z_plane_0(y_z_plane_points_0);
-  ASSERT_EQ(y_z_plane, y_z_plane_0.GetPlaneParams());
+  ASSERT_EQ(0.0, y_z_plane_0.ComputeDistanceMeasure(origin_ap));
+  ASSERT_EQ(0.0, y_z_plane_0.ComputeDistanceMeasure(y_hat_ap));
+  ASSERT_EQ(0.0, y_z_plane_0.ComputeDistanceMeasure(z_hat_ap));
 
   std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > y_z_plane_points_1 = {origin_ap, neg_y_hat_ap, neg_z_hat_ap};
   Plane3DModel y_z_plane_1(y_z_plane_points_1);
-  ASSERT_EQ(y_z_plane, y_z_plane_1.GetPlaneParams());
+  ASSERT_EQ(0.0, y_z_plane_1.ComputeDistanceMeasure(origin_ap));
+  ASSERT_EQ(0.0, y_z_plane_1.ComputeDistanceMeasure(neg_y_hat_ap));
+  ASSERT_EQ(0.0, y_z_plane_1.ComputeDistanceMeasure(neg_z_hat_ap));
 
   std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > y_z_plane_points_2 = {origin_ap, neg_y_hat_ap, z_hat_ap};
   Plane3DModel y_z_plane_2(y_z_plane_points_2);
-  ASSERT_EQ(y_z_plane, y_z_plane_2.GetPlaneParams());
+  ASSERT_EQ(0.0, y_z_plane_2.ComputeDistanceMeasure(origin_ap));
+  ASSERT_EQ(0.0, y_z_plane_2.ComputeDistanceMeasure(neg_y_hat_ap));
+  ASSERT_EQ(0.0, y_z_plane_2.ComputeDistanceMeasure(z_hat_ap));
 
   std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > y_z_plane_points_3 = {origin_ap, y_hat_ap, neg_z_hat_ap};
   Plane3DModel y_z_plane_3(y_z_plane_points_3);
-  ASSERT_EQ(y_z_plane, y_z_plane_3.GetPlaneParams());
+  ASSERT_EQ(0.0, y_z_plane_3.ComputeDistanceMeasure(origin_ap));
+  ASSERT_EQ(0.0, y_z_plane_3.ComputeDistanceMeasure(y_hat_ap));
+  ASSERT_EQ(0.0, y_z_plane_3.ComputeDistanceMeasure(neg_z_hat_ap));
 }
 
+TEST(ComputeDistanceMeasureTest, OffPlane) {
+  Point3D origin(0, 0, 0);
+  Point3D ones(1, 1, 1);
+  Point3D twos(2, 2, 2);
+  Point3D x_hat(1, 0, 0);
+  Point3D y_hat(0, 1, 0);
+  Point3D z_hat(0, 0, 1);
+  Point3D neg_x_hat(-1, 0, 0);
+  Point3D neg_y_hat(0, -1, 0);
+  Point3D neg_z_hat(0, 0, -1);
+
+  PlaneParams x_y_plane(0, 0, 1, 0);
+  PlaneParams x_z_plane(0, 1, 0, 0);
+  PlaneParams y_z_plane(1, 0, 0, 0);
+
+  std::shared_ptr<GRANSAC::AbstractParameter> origin_ap = std::make_shared<Point3D>(origin.m_Point3D[0], origin.m_Point3D[1], origin.m_Point3D[2]);
+  std::shared_ptr<GRANSAC::AbstractParameter> ones_ap = std::make_shared<Point3D>(ones.m_Point3D[0], ones.m_Point3D[1], ones.m_Point3D[2]);
+  std::shared_ptr<GRANSAC::AbstractParameter> twos_ap = std::make_shared<Point3D>(twos.m_Point3D[0], twos.m_Point3D[1], twos.m_Point3D[2]);
+  std::shared_ptr<GRANSAC::AbstractParameter> x_hat_ap = std::make_shared<Point3D>(x_hat.m_Point3D[0], x_hat.m_Point3D[1], x_hat.m_Point3D[2]);
+  std::shared_ptr<GRANSAC::AbstractParameter> y_hat_ap = std::make_shared<Point3D>(y_hat.m_Point3D[0], y_hat.m_Point3D[1], y_hat.m_Point3D[2]);
+  std::shared_ptr<GRANSAC::AbstractParameter> z_hat_ap = std::make_shared<Point3D>(z_hat.m_Point3D[0], z_hat.m_Point3D[1], z_hat.m_Point3D[2]);
+  std::shared_ptr<GRANSAC::AbstractParameter> neg_x_hat_ap = std::make_shared<Point3D>(neg_x_hat.m_Point3D[0], neg_x_hat.m_Point3D[1], neg_x_hat.m_Point3D[2]);
+  std::shared_ptr<GRANSAC::AbstractParameter> neg_y_hat_ap = std::make_shared<Point3D>(neg_y_hat.m_Point3D[0], neg_y_hat.m_Point3D[1], neg_y_hat.m_Point3D[2]);
+  std::shared_ptr<GRANSAC::AbstractParameter> neg_z_hat_ap = std::make_shared<Point3D>(neg_z_hat.m_Point3D[0], neg_z_hat.m_Point3D[1], neg_z_hat.m_Point3D[2]);
+
+  // ones plane
+  std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > ones_plane_points_0 = {x_hat_ap, y_hat_ap, z_hat_ap};
+  Plane3DModel ones_plane_0(ones_plane_points_0);
+  ASSERT_DOUBLE_EQ(1/sqrt(3), ones_plane_0.ComputeDistanceMeasure(origin_ap));
+  ASSERT_DOUBLE_EQ(2/sqrt(3), ones_plane_0.ComputeDistanceMeasure(ones_ap));
+  ASSERT_DOUBLE_EQ(5/sqrt(3), ones_plane_0.ComputeDistanceMeasure(twos_ap));
+
+  // ones plane reversed
+  std::vector<std::shared_ptr<GRANSAC::AbstractParameter> > ones_plane_points_1 = {z_hat_ap, y_hat_ap, x_hat_ap};
+  Plane3DModel ones_plane_1(ones_plane_points_1);
+  ASSERT_DOUBLE_EQ(1/sqrt(3), ones_plane_1.ComputeDistanceMeasure(origin_ap));
+  ASSERT_DOUBLE_EQ(2/sqrt(3), ones_plane_1.ComputeDistanceMeasure(ones_ap));
+  ASSERT_DOUBLE_EQ(5/sqrt(3), ones_plane_1.ComputeDistanceMeasure(twos_ap));
+}
 
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
