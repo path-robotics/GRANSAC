@@ -57,5 +57,5 @@ TARGET_LINK_LIBRARIES(LineFittingSample ${OpenCV_LIBS})
 ADD_EXECUTABLE(PlaneFittingSample test/PlaneFittingSample.cpp src/plane_fit.cpp ${HPP_FILES})
 TARGET_LINK_LIBRARIES(PlaneFittingSample ${OpenCV_LIBS})
 
-ADD_EXECUTABLE(test_PlaneModel test/test_PlaneModel.cpp ${HPP_FILES})
+CATKIN_ADD_GTEST(test_PlaneModel test/test_PlaneModel.cpp ${HPP_FILES})
 TARGET_LINK_LIBRARIES(test_PlaneModel ${OpenCV_LIBS} ${GTEST_LIBRARIES})
